@@ -1,9 +1,7 @@
 pipeline {
 	environment {
 		PROD1_SERVER_IP = "192.168.1.106"
-		PROD2_SERVER_IP = "192.168.1.108"
 		DEV1_SERVER_IP = "192.168.1.105"
-		DEV2_SERVER_IP = "192.168.1.103"
 		GIT_COMMIT_SHORT = sh(
                 script: "printf \$(git rev-parse --short HEAD)",
                 returnStdout: true
@@ -18,9 +16,7 @@ pipeline {
             steps {
                 sh '''
                     echo "PROD1_SERVER_IP = ${PROD1_SERVER_IP}"
-                    echo "PROD2_SERVER_IP = ${PROD2_SERVER_IP}"
                     echo "DEV1_SERVER_IP = ${DEV1_SERVER_IP}"
-                    echo "DEV2_SERVER_IP = ${DEV2_SERVER_IP}"
                     echo "GIT_COMMIT_SHORT = ${GIT_COMMIT_SHORT}"
 					echo "VERSION = ${VERSION}"
 					echo "ARTIFACT = ${ARTIFACT}"
@@ -60,7 +56,6 @@ pipeline {
 		      	script {
 		      		withMaven(mavenSettingsConfig: 'MyMavenSettings') {
 		      			sh "ssh jenkins@$DEV1_SERVER_IP sudo systemctl stop dvdtheque-admin-server.service"
-			      		sh "ssh jenkins@$DEV2_SERVER_IP sudo systemctl stop dvdtheque-admin-server.service"
 		      		}
 		      	}
 		   }
@@ -73,7 +68,6 @@ pipeline {
 		      	script {
 		      		withMaven(mavenSettingsConfig: 'MyMavenSettings') {
 		      			sh "ssh jenkins@$PROD1_SERVER_IP sudo systemctl stop dvdtheque-admin-server.service"
-			      		sh "ssh jenkins@$PROD2_SERVER_IP sudo systemctl stop dvdtheque-admin-server.service"
 		      		}
 		      	}
 		   }
@@ -86,7 +80,6 @@ pipeline {
 		      	script {
 		      		withMaven(mavenSettingsConfig: 'MyMavenSettings') {
 				        sh "scp target/$ARTIFACT jenkins@$DEV1_SERVER_IP:/opt/dvdtheque_admin_server_service/spring-boot-admin-server.jar"
-				        sh "scp target/$ARTIFACT jenkins@$DEV2_SERVER_IP:/opt/dvdtheque_admin_server_service/spring-boot-admin-server.jar"
 		      		}
 		      	}
 		    }
@@ -99,7 +92,6 @@ pipeline {
 		      	script {
 		      		withMaven(mavenSettingsConfig: 'MyMavenSettings') {
 				        sh "scp discovery-service/target/$ARTIFACT jenkins@$PROD1_SERVER_IP:/opt/dvdtheque_admin_server_service/dvdtheque-admin-server.jar"
-				        sh "scp discovery-service/target/$ARTIFACT jenkins@$PROD2_SERVER_IP:/opt/dvdtheque_admin_server_service/dvdtheque-admin-server.jar"
 		      		}
 		      	}
 		    }
@@ -112,7 +104,6 @@ pipeline {
 		      	script {
 		      		withMaven(mavenSettingsConfig: 'MyMavenSettings') {
 		      			sh "ssh jenkins@$DEV1_SERVER_IP sudo systemctl start dvdtheque-admin-server.service"
-				        sh "ssh jenkins@$DEV2_SERVER_IP sudo systemctl start dvdtheque-admin-server.service"
 		      		}
 		      	}
 		    }
@@ -125,7 +116,6 @@ pipeline {
 		      	script {
 		      		withMaven(mavenSettingsConfig: 'MyMavenSettings') {
 		      			sh "ssh jenkins@$PROD1_SERVER_IP sudo systemctl start dvdtheque-admin-server.service"
-				        sh "ssh jenkins@$PROD2_SERVER_IP sudo systemctl start dvdtheque-admin-server.service"
 		      		}
 		      	}
 		    }
@@ -138,7 +128,6 @@ pipeline {
 		      	script {
 		      		withMaven(mavenSettingsConfig: 'MyMavenSettings') {
 		      			sh "ssh jenkins@$DEV1_SERVER_IP sudo systemctl status dvdtheque-admin-server.service"
-		      			sh "ssh jenkins@$DEV2_SERVER_IP sudo systemctl status dvdtheque-admin-server.service"
 		      		}
 		      	}
 		    }
@@ -151,7 +140,6 @@ pipeline {
 		      	script {
 		      		withMaven(mavenSettingsConfig: 'MyMavenSettings') {
 		      			sh "ssh jenkins@$PROD1_SERVER_IP sudo systemctl status dvdtheque-admin-server.service"
-		      			sh "ssh jenkins@$PROD2_SERVER_IP sudo systemctl status dvdtheque-admin-server.service"
 		      		}
 		      	}
 		    }

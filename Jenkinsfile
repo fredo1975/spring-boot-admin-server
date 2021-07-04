@@ -9,7 +9,7 @@ pipeline {
                 returnStdout: true
         )
         def VERSION = getArtifactVersion(GIT_COMMIT_SHORT)
-        def ARTIFACT = "dvdtheque-admin-server-${VERSION}.jar"
+        def ARTIFACT = "spring-boot-admin-server-${VERSION}.jar"
 	}
     //agent { label 'slave01' }
 	agent any
@@ -85,8 +85,8 @@ pipeline {
 	   		steps {
 		      	script {
 		      		withMaven(mavenSettingsConfig: 'MyMavenSettings') {
-				        sh "scp target/$ARTIFACT jenkins@$DEV1_SERVER_IP:/opt/dvdtheque_admin_server_service/discovery-service.jar"
-				        sh "scp target/$ARTIFACT jenkins@$DEV2_SERVER_IP:/opt/dvdtheque_admin_server_service/discovery-service.jar"
+				        sh "scp target/$ARTIFACT jenkins@$DEV1_SERVER_IP:/opt/dvdtheque_admin_server_service/spring-boot-admin-server.jar"
+				        sh "scp target/$ARTIFACT jenkins@$DEV2_SERVER_IP:/opt/dvdtheque_admin_server_service/spring-boot-admin-server.jar"
 		      		}
 		      	}
 		    }
